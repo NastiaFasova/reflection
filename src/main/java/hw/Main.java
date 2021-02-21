@@ -12,6 +12,21 @@ public class Main {
         String packageName = pack.getName();
         System.out.println("Package = " + packageName);
 
+        //Создаем оригинальный объект
+        Notebook notebook = new Notebook();
+
+        //Получаем загрузчик класса у оригинального объекта
+        ClassLoader classLoader = notebook.getClass().getClassLoader();
+
+        //Получаем все интерфейсы, которые реализует оригинальный объект
+        Class[] proxyInterfaces = notebook.getClass().getInterfaces();
+
+        //Создаем прокси нашего объекта notebook
+        Cleanable proxy = (Cleanable) Proxy.newProxyInstance(classLoader, proxyInterfaces, new NotebookInvocationHandler(notebook));
+
+        System.out.println(proxy.cleanMemory());
+
+
         // Отримуємо модифікатори класу
         int classModifiers = reflected.getModifiers();
         System.out.println(Modifier.isPublic(classModifiers));
